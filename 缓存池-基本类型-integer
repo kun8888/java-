@@ -1,0 +1,13 @@
+基本类型对应的缓存池：
+boolean values true and false
+all byte values
+short values between -128 and 127
+int values between -128 and 127
+char in the range \u0000 to \u007F
+
+在使用这些基本类型对应的包装类型时，就可以直接使用缓存池中的对象。
+
+当值超过缓存池中的最大最小值时，会new一个对象出来，此时的 == 为	 false；
+例：Integer a = 100,b = 100,c = 150,d = 150;
+    System.out.println(a==b);  true
+    System.out.println(c==d);  false
