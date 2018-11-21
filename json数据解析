@@ -11,3 +11,12 @@ js：{
 
 * 转成json数组---JSONArray.fromObject(request.getParameter("参数名"));
 * 从json数组中获取json对象：---jsonArray.getJSONObject(i);
+
+* 遍历：
+    Set<String> keys = jsonObj.keySet();
+        for(String key : keys){
+            JSONObject o = jsonObj.getJSONObject(key);
+            if(o.size() > 0) {
+                // 操作
+            }
+        }
