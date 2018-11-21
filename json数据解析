@@ -1,0 +1,13 @@
+js页面传json字符串：后台解析
+
+页面：
+js：{
+    name : "张三",
+    age : "15"
+    }
+    
+后台：
+* 转成json对象---JSONObject.fromObject(request.getParameter("参数名"));
+
+* 转成json数组---JSONArray.fromObject(request.getParameter("参数名"));
+* 从json数组中获取json对象：---jsonArray.getJSONObject(i);
