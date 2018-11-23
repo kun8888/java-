@@ -1,0 +1,5 @@
+多个字段like：
+   select * from table where 
+                        REGEXP_LIKE(字段,'(xxx|xx|x)')// 全模糊匹配---%xxx%
+                        REGEXP_LIKE(字段,'^(xxx|xx|x)')// 右模糊匹配---xxx%
+                        REGEXP_LIKE(字段,'(xxx|xx|x)$')// 左模糊匹配---%xxx
