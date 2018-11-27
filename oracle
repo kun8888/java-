@@ -1,5 +1,14 @@
-多个字段like：
-   select * from table where 
+多个字段like：   
+   * select * from table where 
                         REGEXP_LIKE(字段,'(xxx|xx|x)')// 全模糊匹配---%xxx%
                         REGEXP_LIKE(字段,'^(xxx|xx|x)')// 右模糊匹配---xxx%
                         REGEXP_LIKE(字段,'(xxx|xx|x)$')// 左模糊匹配---%xxx
+                        
+                      
+遍历树结构：                      
+   start with 子句：遍历起始条件，有个小技巧，如果要查父结点，这里可以用子结点的列，反之亦然。
+
+   connect by 子句：连接条件。关键词prior，prior跟父节点列parentid放在一起，就是往父结点方向遍历；prior跟子结点列subid放在一起，则往叶子结点方向遍历，
+                     parentid、subid两列谁放在“=”前都无所谓，关键是prior跟谁在一起。
+
+   * select t.* from DZ_THEME t start with t.ID = 'ROOT' connect by prior t.ID = t.PARENT_ID
