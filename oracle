@@ -12,3 +12,7 @@
                      parentid、subid两列谁放在“=”前都无所谓，关键是prior跟谁在一起。
 
    * select t.* from DZ_THEME t start with t.ID = 'ROOT' connect by prior t.ID = t.PARENT_ID
+
+
+group by 与 wm_concat：
+   * wm_concat后的长度如果超过4000，则会报错，解决方法是转成clob。（目前还未测试过）
