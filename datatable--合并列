@@ -1,0 +1,28 @@
+<table class="table table-striped table-bordered" style="width: 6000px" id="tableId">
+      <thead>
+          <tr class="heading">
+              <th style="width:1.5%" rowspan="2">序号</th>
+              <th style="width:3%" rowspan="2">部门名称</th>
+              <th style="width:1.5%" rowspan="2">统计月度</th>
+              <th style="width:4%" colspan="4">数据上报情况（新增）</th>
+              <th style="width:4%" colspan="4">数据上报情况（累积）</th>
+          </tr>
+          <tr class="heading">
+              <%--数据上报情况（新增）--%>
+              <th>上报量</th>
+              <th>疑问量</th>
+              <th>更新量</th>
+              <th>入库量</th>
+              <%--数据上报情况（累积）--%>
+              <th>上报量</th>
+              <th>疑问量</th>
+              <th>更新量</th>
+              <th>入库量</th>
+          </tr>
+      </thead>
+  </table>
+  
+  var table = $('#tableId').DataTable({
+    columns:[]// 此处字段的数量 = tr中的所有列的数量（此处应为 1 + 1 + 1 + 4 + 4 = 11）
+              // 字段也一一对应
+  });
