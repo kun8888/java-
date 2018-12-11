@@ -16,3 +16,8 @@
 
 group by 与 wm_concat：
    * wm_concat后的长度如果超过4000，则会报错，解决方法是转成clob。（目前还未测试过）
+   
+
+row_number() over(partition by col1 ORDER BY col2 ASC ) ：
+  * 将表中的数据按照col1进行分组，按照col2排序。partition by：表示分组。该函数主要是根据分组进行排序之后然后取出第一条数据以实现“去重”。
+
