@@ -1,0 +1,15 @@
+多表关联：
+  * ORACLE的解析器按照从右到左的顺序处理FROM子句中的表名，因此FROM子句中写在最后的表(基础表 driving table)将被最先处理。 在FROM子句中包含多个表的情况下,你必须选择记录条数最少的表作为基础表。
+  * 如果有3个以上的表连接查询， 那就需要选择交叉表(intersection table)作为基础表, 交叉表是指那个被其他表所引用的表。
+  例（EMP表描述了LOCATION表和CATEGORY表的交集）：
+    SELECT *
+      FROM LOCATION L ,
+             CATEGORY C,
+             EMP E
+      WHERE E.EMP_NO BETWEEN 1000 AND 2000
+      AND E.CAT_NO = C.CAT_NO
+      AND E.LOCN = L.LOCN
+  
+
+where：
+  * ORACLE采用自下而上的顺序解析WHERE子句,根据这个原理,表之间的连接必须写在其他WHERE条件之前, 那些可以过滤掉最大数量记录的条件必须写在WHERE子句的末尾。
