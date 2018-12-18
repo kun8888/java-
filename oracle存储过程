@@ -1,0 +1,16 @@
+loop中捕捉异常：
+  * declare
+      v_name varchar2(50);
+    begin
+      for i in 100..300 loop
+        begin
+          select first_name || '.' || last_name into v_name from employees where employee_id = i;
+          dbms_output.put_line('#' || i || ': ' || v_name);
+        exception
+          when no_data_found then
+            dbms_output.put_line('Not find #' || i);
+          when others then
+            exit;    
+        end;
+      end loop;
+    end;
