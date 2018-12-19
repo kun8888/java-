@@ -1,0 +1,133 @@
+导出合并单元格的excel：
+
+  * sheet.addMergedRegion(new CellRangeAddress(0, 1, 2, 3));// 开始行、结束行、开始列、结束列
+  * 导出excel名有中文，需要设置response
+    response.reset();
+          response.setHeader("Content-disposition",
+                  "attachment;filename*=utf-8''" + URLEncoder.encode(excelName + exportDate + sufix, "UTF-8") + ";filename=\""
+                          + URLEncoder.encode(excelName + exportDate + sufix, "UTF-8") + "\"");
+          response.setContentType("application/vnd.ms-excel; charset=UTF-8");
+  
+  例：
+  /**
+     * @Author: fk
+     * @Description: 导出含有多个表头的excel
+     * @Date: 13:23 2018/12/18
+     * @Param: [singleTitle:不需要合并单元格的标题, titles:各指标（新增、累计）, values:指标数据]
+     * @return: org.apache.poi.xssf.usermodel.XSSFWorkbook[]
+     **/
+    private XSSFWorkbook makeExcel(String[] singleTitle, List<String> titles, List<List<String>> values) {
+        // 使用兼容office2007和2003的格式来产生工作薄对象
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        List<Integer> collength = new ArrayList<Integer>();// 用来记录最大列宽,自动调整列宽。
+        XSSFSheet sheet = workbook.createSheet();// 产生工作表对象
+        workbook.setSheetName(0, "sheet01");// 设置工作簿名称
+
+        XSSFRow row = sheet.createRow(0);// 标题第一行
+        XSSFRow rowDetail = sheet.createRow(1);// 标题第二行
+        XSSFCell cell;// 单元格
+
+        // 标题样式
+        XSSFCellStyle titleStyle = workbook.createCellStyle();
+        titleStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);// 填充单元格
+        titleStyle.setFillForegroundColor(IndexedColors.TAN.getIndex()); // 填橘黄色
+        XSSFFont font = workbook.createFont();
+        font.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);// 粗体
+        titleStyle.setFont(font);// 字体
+        titleStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        titleStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        titleStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        titleStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+        titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);// 左右居中
+        titleStyle.setWrapText(true); // 换行
+        titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);// 上下居中
+
+        // 列样式
+        XSSFCellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);// 左右居中
+        cellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);// 上下居中
+
+        // 无需合并列的标题
+        for (int i = 0; i < singleTitle.length; i++) {
+            cell = row.createCell(i);// 创建第一行单元格
+            cell.setCellType(HSSFCell.CELL_TYPE_STRING); // 设置单元格内容为字符串型
+            cell.setCellStyle(titleStyle);// 设置单元格格式
+            cell.setCellValue(singleTitle[i]);// 给单元格内容赋值
+            collength.add(singleTitle[i].getBytes().length);
+
+            cell = rowDetail.createCell(i);// 创建第二行单元格
+            cell.setCellType(HSSFCell.CELL_TYPE_STRING); // 设置单元格内容为字符串型
+            cell.setCellStyle(titleStyle);// 设置单元格格式
+            cell.setCellValue(singleTitle[i]);// 给单元格内容赋值
+
+            // 合并行
+            sheet.addMergedRegion(new CellRangeAddress(0, 1, i, i));
+        }
+
+
+
+        // 需要合并列的标题
+        int colNum = singleTitle.length;// 记录列数
+        for (int i = 0; i < titles.size(); i++) {
+            String cellName = titles.get(i).split(":")[0];
+            String detailArr[] = titles.get(i).split(":")[1].split(",");
+
+            for (int j = 0; j < detailArr.length; j++) {
+                // 大标题
+                cell = row.createCell(j + colNum);// 创建单元格
+                // 因为需要合并单元格，因此这些属性只要设置第一次
+                cell.setCellType(HSSFCell.CELL_TYPE_STRING);// 设置单元格内容为字符串型
+                cell.setCellStyle(titleStyle);// 设置单元格格式
+                cell.setCellValue(cellName);// 给单元格内容赋值
+                // 细分的指标
+                cell = rowDetail.createCell(j + colNum);// 创建单元格
+                cell.setCellType(HSSFCell.CELL_TYPE_STRING);// 设置单元格内容为字符串型
+                cell.setCellStyle(titleStyle);// 设置单元格格式
+                cell.setCellValue(detailArr[j]);// 给单元格内容赋值
+                collength.add(cellName.getBytes().length);
+            }
+            // 合并列
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, colNum, colNum + detailArr.length - 1));
+
+            colNum += detailArr.length;
+        }
+
+        // 临时单元格内容
+        String tempCellContent = "";
+        // 写入各条记录,每条记录对应excel表中的一行
+        for (int i = 0; i < values.size(); i++) {
+            List<String> tmpRow = values.get(i);
+            // 生成一行
+            row = sheet.createRow(i + 2);
+            for (int j = 0; j < tmpRow.size(); j++) {
+                cell = row.createCell(j);
+                // 设置单元格字符类型为String
+                cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+                // 设置单元格格式
+                cell.setCellStyle(cellStyle);
+                tempCellContent = (tmpRow.get(j) == null) ? "" : tmpRow.get(j);
+                cell.setCellValue(tempCellContent);
+
+                // 数据列中的最大列数大于等于标题列的列数时
+                if (j >= collength.size()) {
+                    collength.add(tempCellContent.getBytes().length);
+                }
+                // 如果这个内容的宽度大于之前最大的，就按照这个设置宽度。
+                if (collength.get(j) < tempCellContent.getBytes().length) {
+                    collength.set(j, tempCellContent.getBytes().length);
+                }
+
+                // 如果这个内容的宽度大于50,就设置为50（防止过宽，大于255会报错）。
+                if (collength.get(j) > CLUMN_WIDTH_SET) {
+                    collength.set(j, CLUMN_WIDTH_SET);
+                }
+
+            }
+        }
+        // 调整列为这列文字对应的最大宽度。
+        for (int i = 0; i < values.size(); i++) {
+            sheet.setColumnWidth(i, (int) (collength.get(i) * 1.3 * 256));
+        }
+
+        return workbook;
+    }
