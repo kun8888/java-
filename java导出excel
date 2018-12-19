@@ -9,6 +9,8 @@
           response.setContentType("application/vnd.ms-excel; charset=UTF-8");
   
   例：
+  public static final int CLUMN_WIDTH_SET = 50;
+  
   /**
      * @Author: fk
      * @Description: 导出含有多个表头的excel
