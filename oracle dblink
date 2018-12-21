@@ -1,0 +1,9 @@
+创建dblink：
+  * CREATE PUBLIC DATABASE LINK orcl87（orcl87为dblink名称）
+    CONNECT TO credit_ywk_gs IDENTIFIED BY credit_ywk_gs （用户名 IDENTIFIED BY 密码）
+    USING '(DESCRIPTION=(CONNECT_DATA=(SERVICE_NAME=orcl))(ADDRESS=(PROTOCOL=TCP)(HOST=10.191.30.87)(PORT=1521)))';
+                                      （orcl为服务名）                            （10.191.30.87为IP）（1521为端口）
+
+查看目标库表结构：
+  * select * from dba_tab_columns@orcl87 t where t.table_name = 'tableName'（有dba权限）
+  * select * from user_tab_columns@orcl87 t where t.table_name = 'tableName'（没有dba权限）
