@@ -21,3 +21,18 @@ group by 与 wm_concat：
 row_number() over(partition by col1 ORDER BY col2 ASC ) ：
   * 将表中的数据按照col1进行分组，按照col2排序。partition by：表示分组。该函数主要是根据分组进行排序之后然后取出第一条数据以实现“去重”。
 
+instr：
+  * 表A（学生）、表B（课程）：
+    · 表 A 
+      id    name     Course
+      1     张三      1，2，3
+    · 表 B
+      code    name
+      1       语文
+      2       数字
+      3       英语
+      
+  * select A.name, (select wm_concat(B.name) from B where instr(A.course, B.code) > 0) kc FROM A where A.name ='张三'
+    · 结果：
+      name    kc
+      张三    语文,数字,英语
