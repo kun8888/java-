@@ -12,6 +12,8 @@
                      parentid、subid两列谁放在“=”前都无所谓，关键是prior跟谁在一起。
 
    * select t.* from DZ_THEME t start with t.ID = 'ROOT' connect by prior t.ID = t.PARENT_ID
+   
+   * 树结构排序：order siblings by......(同一父级下的排序，如果没有siblings，则会所有数据根据字段排序)
 
 
 group by 与 wm_concat：
