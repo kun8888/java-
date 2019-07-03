@@ -1,0 +1,2 @@
+-- 查询数据库中的表
+    select * from information_schema.TABLES t where table_schema='数据库名' and table_name like '%xxx%'
