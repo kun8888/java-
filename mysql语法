@@ -1,2 +1,12 @@
 -- 查询数据库中的表
     select * from information_schema.TABLES t where table_schema='数据库名' and table_name like '%xxx%'
+
+-- 删除有外键的表时
+    oracle：drop table xxx cascade constraints;
+    mysql不支持这么写，可以用以下写法: 
+        SET FOREIGN_KEY_CHECKS = 0;
+
+        drop table if exists xxx;
+        drop .......;
+        
+        SET FOREIGN_KEY_CHECKS = 1;
