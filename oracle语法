@@ -38,3 +38,9 @@ instr：
     · 结果：
       name    kc
       张三    语文,数字,英语
+      
+获取指定时间段内每天日期
+  * SELECT to_char(day,'yyyy-mm-dd') as ddd
+    from ( SELECT to_date(to_char(trunc(to_date('2017-07-10', 'yyyy-mm-dd'), 'dd'), 'yyyy-mm-dd'), 'yyyy-mm-dd') - rownum + 1 as day
+       FROM dual CONNECT BY ROWNUM <= (to_date('2017-07-10', 'yyyy-mm-dd') - to_date( '2017-06-10', 'yyyy-mm-dd') + 1)
+     ) ORDER BY day asc
