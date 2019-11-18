@@ -1,0 +1,5 @@
+String url = request.getScheme() +"://" + InetAddress.getLocalHost().getHostAddress()
+                + ":" +request.getServerPort()
+                + request.getContextPath()
+                
+url = "http://192.168.20.58/project";
